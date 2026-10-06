@@ -1,0 +1,68 @@
+// Aqua360 Pools — Database Schema
+// Works with SQLite locally; to move to Supabase Postgres, see
+// supabase/README.md (only the datasource provider + DATABASE_URL change).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  tagline     String
+  description String
+  icon        String // lucide icon name
+  features    String // JSON string array
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  location    String
+  category    String // residential | commercial | water-features | renovation
+  description String
+  image       String
+  specs       String // JSON object { size, depth, duration, type }
+  featured    Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  quote     String
+  rating    Int      @default(5)
+  approved  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Stat {
+  id        String @id @default(cuid())
+  label     String
+  value     Int
+  suffix    String?
+  sortOrder Int     @default(0)
+}
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  projectType String
+  location    String?
+  budget      String?
+  message     String
+  status      String   @default("new") // new | contacted | quoted | closed
+  createdAt   DateTime @default(now())
+}
